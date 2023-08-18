@@ -141,7 +141,7 @@ agent_kwargs = {
     "system_message": system_message,
 }
 
-llm = ChatOpenAI(temperature=0, model = "gpt-3,5-turbo-16k-0613")
+llm = ChatOpenAI(temperature=0, model = "gpt-3.5-turbo-16k-0613")
 memory = ConversationSummaryBufferMemory(memory_key="memory", return_messages=True, llm=llm, max_token_limit=1000)
 
 agent = initialize_agent(
@@ -155,7 +155,7 @@ agent = initialize_agent(
 
 #4 Use streamlit to create a web app
 def main():
-    st.set_page_config(page_title="AI researcg agent", page_icon=":bird:")
+    st.set_page_config(page_title="AI research agent", page_icon=":bird:")
 
     st.header("AI research agent :bird:")
     query = st.text_input("Research goal")
