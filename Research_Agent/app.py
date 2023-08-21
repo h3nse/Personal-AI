@@ -21,6 +21,7 @@ from langchain.schema import SystemMessage
 load_dotenv()
 browserless_api_key = os.getenv("BROWSERLESS_API_KEY")
 seper_api_key = os.getenv("SERP_API_KEY")
+print(seper_api_key)
 
 #1 Tool for search
 def search(query):
@@ -79,7 +80,7 @@ def summary(objective, content):
         separators=["\n\n", "\n"], chunk_size=10000, chunk_overlap=500)
     docs = text_splitter.create_documents([content])
     map_prompt = """
-    Write a summary of the following text for {objective}:
+    Write a summary of the following text for {ovjective}:
     "{text}"
     SUMMARY:
     """
