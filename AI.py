@@ -15,23 +15,27 @@ from langchain.schema import BaseOutputParser
     
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-template = """You will from now on pretend to be a man named James, James is rude and often uses curse words like fuck and shit"""
+template = """You are a helpful personal assistant, you act like a gentleman, and speak like so."""
 system_message_prompt = SystemMessagePromptTemplate.from_template(template)
 human_template = "{text}"
 human_message_prompt = HumanMessagePromptTemplate.from_template(human_template)
 
 chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt, human_message_prompt])
 chain = LLMChain(
-    llm=ChatOpenAI(temperature=0, model = "gpt-3.5-turbo-16k-0613", openai_api_key="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"),
+    llm=ChatOpenAI(temperature=1, model = "gpt-3.5-turbo-16k-0613", openai_api_key="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"),
     prompt=chat_prompt
 )
 
-# Create mp3 file from text
-response = chain.run("what is your name?")
-language = 'en'
+while True:
+    # Create mp3 file from text
+    user_message = input()
+    response = chain.run(user_message)
+    language = 'en'
 
-response_audio = gTTS(text=response, lang=language)
-response_audio.save('responseFile.mp3')
+    print(response)
+    response_audio = gTTS(text=response, lang=language)
+    response_audio.save('responseFile.mp3')
 
-# Play audio with playsound
-playsound('responseFile.mp3')
+    # Play audio with playsound
+    playsound('responseFile.mp3')
+    os.remove('responseFile.mp3')
