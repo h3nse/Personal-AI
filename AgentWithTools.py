@@ -6,6 +6,8 @@ from langchain.agents import tool
 from langchain.schema import SystemMessage
 from langchain.agents import OpenAIFunctionsAgent
 from langchain.agents import AgentExecutor
+from gtts import gTTS
+from playsound import playsound
 
 load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -26,4 +28,16 @@ agent = OpenAIFunctionsAgent(llm=llm, tools=tools, prompt=prompt)
 
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
-agent_executor.run("how many letters in the word educa?")
+while True:
+    # Create mp3 file from text
+    user_message = input()
+    response = agent_executor.run(user_message)
+    language = 'en'
+
+    print(response)
+    response_audio = gTTS(text=response, lang=language)
+    response_audio.save('responseFile.mp3')
+
+    # Play audio with playsound
+    playsound('responseFile.mp3')
+    os.remove('responseFile.mp3')
