@@ -18,7 +18,7 @@ load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
 def get_human_input(quiry):
-    return input(quiry)
+    return input(quiry + ' ')
 
 # Implement tools
 tools = [
@@ -39,14 +39,14 @@ memory = ConversationBufferMemory(memory_key=MEMORY_KEY, return_messages=True)
 
 # Create llm and prompt
 llm=ChatOpenAI(temperature=0, model = "gpt-3.5-turbo-16k-0613", openai_api_key=openai_api_key)
-system_message = SystemMessage(content= """You are a devoted personal assistant, helping your human with a large variety of things.
-                               You always try to be as helpful as possible, and you take your own initiative to decide which answers would best help your human.
+system_message = SystemMessage(content= """You are a devoted personal assistant, helping your human with a large variety of things, through a large selection of tools.
+                               You always try to be as helpful as possible, and you take your own initiative to decide which answers would best and most concisely help your human.
                                
                                When doing anything, please keep the following things in mind:
                                // Only provide necessary information.
-                               // When asked a question, try to think "Would I be able to provide a more helpful answer if I ask the human for more information?" For example: Human: "What's the weather like?" Thought: "It would be most helpful to the human, if my answer depicts their location" Action: get_human_input("Where do you live?")
+                               // When asked a question, try to think "Would I be able to provide a more helpful answer if I ask the human for more information?". I.e. specifics about them such as where they're located etc.
                                // If a task consists of multiple objetives, you will split it up and do each objective in a series of actions.
-                               // When doing research, you will use the output you give as a baseline for your knowledge, but create your own explanation, specifically focused on the original user quiry.""")
+                               // When doing research, you will use the output as a baseline for your knowledge, but create your own explanation, specifically focused on the original user quiry.""")
 prompt = OpenAIFunctionsAgent.create_prompt(
     system_message=system_message,
     extra_prompt_messages=[MessagesPlaceholder(variable_name=MEMORY_KEY)])
