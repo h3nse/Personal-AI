@@ -12,25 +12,23 @@ from langchain.prompts import MessagesPlaceholder
 from gtts import gTTS
 from playsound import playsound
 
-import Research_Agent as RA
+from Tools import *
 
 load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
-def get_human_input(quiry):
-    return input(quiry + ' ')
 
 # Implement tools
 tools = [
     Tool(
         name = "Research",
-        func = RA.do_research,
+        func = Research_Agent.do_research,
         description = "useful for when you need to answer questions about current events, or need things from the internet. You should ask targeted questions"
     ),
     Tool(
         name = "get_human_input",
-        func = get_human_input,
-        description = "useful for when you need further elaboration on the quiry you've been asked, or for when you need information about the human asking it."
+        func = Base_Tools.get_human_input,
+        description = "useful for when you need further elaboration on the quiry you've been asked, or for when you need information about the human asking it. You should sound pleasant when asking."
     )]
 
 # Create memory
