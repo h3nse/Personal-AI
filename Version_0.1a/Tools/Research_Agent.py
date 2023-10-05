@@ -20,7 +20,7 @@ from langchain.schema import SystemMessage
 
 load_dotenv()
 browserless_api_key = os.getenv("BROWSERLESS_API_KEY")
-seper_api_key = os.getenv("SERP_API_KEY")
+serper_api_key = os.getenv("SERPER_API_KEY")
 
 #1 Tool for search
 def search(query):
@@ -31,7 +31,7 @@ def search(query):
     })
 
     headers = {
-        'X-API-KEY': seper_api_key,
+        'X-API-KEY': serper_api_key,
         'Content-Type': 'application/json'
     }
 
@@ -148,7 +148,7 @@ agent = initialize_agent(
     tools,
     llm,
     agent=AgentType.OPENAI_FUNCTIONS,
-    verbose=True,
+    verbose=False,
     agent_kwargs = agent_kwargs,
     memory = memory,
     )
