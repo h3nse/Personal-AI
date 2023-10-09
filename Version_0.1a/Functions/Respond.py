@@ -8,11 +8,11 @@ import os
 import librosa
 from pynput.keyboard import Key, Controller
 import keyboard
-
-Threads_running = True
+import msvcrt
+import time
 
 def play_audio(audio_file_path):
-    global Threads_running
+    global audio_playing
 
     wf = wave.open(audio_file_path, 'rb')
     p = pyaudio.PyAudio()
@@ -29,18 +29,18 @@ def play_audio(audio_file_path):
         stream.write(data)
         data = wf.readframes(chunk_size)
     
+    audio_playing = False
     stream.stop_stream()
     stream.close()
     p.terminate()
-    audio_playing = True
 
-def get_input(foo, channel):
-    while Threads_running:
-        response = input()
-        channel.put(response)
+def timer_callback():
+    global audio_playing
+    audio_playing = False
 
 def Respond(response):
-    global Threads_running
+    global audio_playing
+    audio_playing = True
 
     print(response)
     response_audio = gTTS(text=response, lang='en')
@@ -54,24 +54,21 @@ def Respond(response):
     os.remove('responseFile.mp3')
     timeout = librosa.get_duration(path='responseFile.wav')
 
-    # Specify the path to your audio file
+    # Specify the path to audio file
     audio_file_path = "responseFile.wav"
 
     # Create a thread for audio playback
-    audio_thread = threading.Thread(target=play_audio, args=(audio_file_path,), daemon=True)
+    audio_thread = threading.Thread(target=play_audio, args=(audio_file_path,))
     audio_thread.start()
-    
-    # Start awaiting input on seperate thread
-    channel = queue.Queue()
-    input_thread = threading.Thread(target=get_input, args=("", channel), daemon=True)
-    input_thread.start()
 
-    # Wait for either an input or the duration to expire
-    try:
-        channel.get(True, timeout)
-    except queue.Empty:
-        pass
+    timer_thread = threading.Timer(timeout, timer_callback)
+    timer_thread.start()
 
-    Threads_running = False
+    while audio_playing:
+        if msvcrt.kbhit():
+            msvcrt.getche()
+            audio_playing = False
+
     audio_thread.join()
+    timer_thread.join()
     os.remove('responseFile.wav')

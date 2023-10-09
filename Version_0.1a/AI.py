@@ -18,9 +18,8 @@ from langchain.prompts import MessagesPlaceholder
 from gtts import gTTS
 from playsound import playsound
 
-sys.path.insert(0, 'Version_0.1a\Tools')
-
 from Tools import Research_Agent, Base_Tools
+from Functions.Respond import Respond
 
 Debugging = False
 
@@ -67,60 +66,8 @@ prompt = OpenAIFunctionsAgent.create_prompt(
 agent = OpenAIFunctionsAgent(llm=llm, tools=tools, prompt=prompt, memory=memory)
 agent_executor = AgentExecutor(agent=agent, tools=tools, memory=memory, verbose=Debugging)
 
-# Play audio
-audio_playing = True
-
-def play_audio(audio_file_path):
-    global audio_playing
-
-    wf = wave.open(audio_file_path, 'rb')
-    p = pyaudio.PyAudio()
-    
-    stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                    channels=wf.getnchannels(),
-                    rate=wf.getframerate(),
-                    output=True)
-    
-    chunk_size = 1024
-    data = wf.readframes(chunk_size)
-    
-    while data and audio_playing:
-        stream.write(data)
-        data = wf.readframes(chunk_size)
-    
-    stream.stop_stream()
-    stream.close()
-    p.terminate()
-
-# Main loop
 while True:
-    # Create mp3 file from text
     user_message = input('>')
     response = agent_executor.run(user_message)
-    language = 'en'
 
-    print(response)
-    response_audio = gTTS(text=response, lang=language)
-
-    # Save the response audio as an MP3 file
-    response_audio.save('responseFile.mp3')
-
-    # Convert the MP3 audio to WAV format using pydub
-    audio = AudioSegment.from_mp3('responseFile.mp3')
-    audio.export('responseFile.wav', format='wav')
-    os.remove('responseFile.mp3')
-
-    # Play audio 
-    # Specify the path to your audio file
-    audio_file_path = "responseFile.wav"
-
-    # Create a thread for audio playback
-    audio_thread = threading.Thread(target=play_audio, args=(audio_file_path,))
-    audio_thread.start()
-
-    input("Press Enter to stop playback.")  # Wait for Enter key press
-    audio_playing = False  # Set the flag to stop audio playback
-
-    # Wait for the audio thread to finish
-    audio_thread.join()
-    os.remove('responseFile.wav')
+    Respond(response)
