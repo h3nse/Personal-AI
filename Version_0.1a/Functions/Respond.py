@@ -1,4 +1,3 @@
-import queue
 import threading
 import wave
 import pyaudio
@@ -6,10 +5,7 @@ from pydub import AudioSegment
 from gtts import gTTS
 import os
 import librosa
-from pynput.keyboard import Key, Controller
-import keyboard
 import msvcrt
-import time
 
 def play_audio(audio_file_path):
     global audio_playing
