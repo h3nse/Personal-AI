@@ -17,6 +17,9 @@ import requests
 import json
 import streamlit as st
 from langchain.schema import SystemMessage
+from colorama import Fore, Style, init
+
+init()
 
 load_dotenv()
 browserless_api_key = os.getenv("BROWSERLESS_API_KEY")
@@ -62,7 +65,6 @@ def scrape_website(objective: str, url: str):
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, "html.parser")
         text = soup.get_text()
-        print("Content:", text)
     
         if len(text) > 10000:
             output = summary(objective, text)
@@ -154,7 +156,10 @@ agent = initialize_agent(
     )
 
 def do_research(query):
-    return agent({"input": query})['output']
+    print(f"{Fore.YELLOW}doing research for \"{query}\"{Style.RESET_ALL}")
+    response = agent({"input": query})['output']
+    print(f"{Fore.GREEN}research agent responded with:\n{response}{Style.RESET_ALL}")
+    return response
 #4 Use streamlit to create a web app
 # def main():
 #     st.set_page_config(page_title="AI research agent", page_icon=":bird:")
