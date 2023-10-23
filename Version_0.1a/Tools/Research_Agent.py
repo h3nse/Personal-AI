@@ -156,6 +156,10 @@ agent = initialize_agent(
     )
 
 def do_research(query):
+    """Do in depth research on a topic or quiry.
+    
+    Args:
+        query: A quiry or topic to be researched"""
     print(f"{Fore.YELLOW}doing research for \"{query}\"{Style.RESET_ALL}")
     response = agent({"input": query})['output']
     print(f"{Fore.GREEN}research agent responded with:\n{response}{Style.RESET_ALL}")

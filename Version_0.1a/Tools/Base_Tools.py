@@ -5,12 +5,20 @@ from colorama import Fore, Style, init
 init()
 load_dotenv()
 
-def get_human_input(quiry):
-    return input(f"{Fore.MAGENTA}{quiry}\n>>{Style.RESET_ALL}")
+def get_human_input(follow_up_question: str):
+    """Ask the user a follow up question.
+    
+    Args:
+        follow_up_question: The question for the user, asked politely"""
+    return input(f"{Fore.MAGENTA}{follow_up_question}\n>>{Style.RESET_ALL}")
 
 from serpapi import GoogleSearch
 
-def quick_search(query):
+def quick_search(query: str):
+    """Search something on the internet.
+    
+    Args:
+        query: A targeted search query"""
     print(f"{Fore.YELLOW}doing search for \"{query}\"{Style.RESET_ALL}")
     params = {
         "api_key": os.getenv("SERPAPI_API_KEY"),
