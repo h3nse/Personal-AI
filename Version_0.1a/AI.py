@@ -21,7 +21,7 @@ from playsound import playsound
 from Tools import Research_Agent, Base_Tools
 from Functions.Respond import Respond
 
-Debugging = False
+Debugging = True
 
 load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
