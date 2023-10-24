@@ -11,7 +11,7 @@ from langchain.agents import AgentExecutor
 from langchain.schema import SystemMessage
 from langchain.agents import OpenAIFunctionsAgent
 from langchain.chat_models import ChatOpenAI
-from langchain.agents import Tool, tool
+from langchain.agents import Tool
 from langchain.memory import ConversationBufferMemory
 from langchain.prompts import MessagesPlaceholder
 
